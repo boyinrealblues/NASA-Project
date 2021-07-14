@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.nasa.R
@@ -31,10 +32,18 @@ class ApodFragment : Fragment() {
         val model = ViewModelProvider(this).get(APODViewModel::class.java)
         model.getAPOD()
         activity?.findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.VISIBLE
+
         model.APODData.observe(viewLifecycleOwner,{
             binding.textTitle.setText(it.title)
+            binding.date.setText(it.date)
+            binding.description.setText(it.explanation)
+            if(it.media_type.equals("video"))
+            binding.videoView.setVideoURI(it.url.toUri())
+            binding.videoView.setOnPreparedListener {
+                binding.videoView.start()
+            }
             activity?.findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.GONE
-            Log.e(TAG,"${it.title}")
         })
+
     }
 }
