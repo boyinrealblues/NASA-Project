@@ -6,5 +6,5 @@ import retrofit2.http.Query
 interface APODService
 {
     @GET("apod")
-    suspend fun getAPOD(@Query("api_key" ) key : String):APOD
+    suspend fun getAPOD(@Query("api_key") key : String,@Query("date") date : String = "2021-07-08"):APOD
 }

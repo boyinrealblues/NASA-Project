@@ -11,6 +11,7 @@ import android.widget.ProgressBar
 import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.nasa.R
 import com.example.nasa.databinding.FragmentApodBinding
 
@@ -37,11 +38,24 @@ class ApodFragment : Fragment() {
             binding.textTitle.setText(it.title)
             binding.date.setText(it.date)
             binding.description.setText(it.explanation)
-            if(it.media_type.equals("video"))
-            binding.videoView.setVideoURI(it.url.toUri())
-            binding.videoView.setOnPreparedListener {
-                binding.videoView.start()
+            when(it.media_type) {
+               "video"-> {
+                   binding.imageView?.visibility= View.GONE
+                   binding.videoView.visibility = View.VISIBLE
+                   binding.videoView.setVideoURI(it.url.toUri())
+                   binding.videoView.setOnPreparedListener {
+                       binding.videoView.start()
+                   }
+               }
+
+                "image"-> {
+                    binding.imageView?.visibility = View.VISIBLE
+                    binding.videoView.visibility = View.GONE
+                    Glide.with(this).load(it.url).centerCrop().into(binding.imageView!!)
+                }
+
             }
+
             activity?.findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.GONE
         })
 
