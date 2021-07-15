@@ -22,7 +22,7 @@ import com.example.nasa.databinding.FragmentApodBinding
 
 private const val TAG = "ApodFragment"
 class ApodFragment : Fragment() {
-    lateinit private var mApod : APOD
+    lateinit var mApod : APOD
     lateinit private var binding: FragmentApodBinding
     override fun onCreateView(
         inflater: LayoutInflater,
