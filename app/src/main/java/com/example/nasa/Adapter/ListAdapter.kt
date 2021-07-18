@@ -1,6 +1,7 @@
 package com.example.nasa.Adapter
 
 import android.text.Layout
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +17,14 @@ import com.example.nasa.R
 import com.example.nasa.UI.ApodFragment
 import kotlinx.coroutines.NonDisposableHandle.parent
 
+private const val TAG = "ListAdapter"
 class ListAdapter(private val listener : onItemTouchListener) : RecyclerView.Adapter<ListAdapter.ListViewHolder>(){
 
     private var oldList = emptyList<APOD>()
-
     class ListViewHolder(private val view : View,private val listener : ListAdapter.onItemTouchListener,private val parent:ViewGroup?) : RecyclerView.ViewHolder(view){
         private val imageView : ImageView
         init{
              imageView = view.findViewById(R.id.thumbnail)
-
         }
         fun bind(data:APOD,position: Int) {
             Glide.with(parent!!.context).load(data.url).into(imageView)
@@ -50,11 +50,8 @@ class ListAdapter(private val listener : onItemTouchListener) : RecyclerView.Ada
 
     override fun getItemCount() = oldList.size
 
-       fun submitList( newList : List<APOD>)
+       fun submitList(newList : List<APOD>)
        {
-           newList.filter {
-               it.media_type.equals("image")
-           }
             val callback = ListDiffUtil(oldList,newList)
             val calc = DiffUtil.calculateDiff(callback)
             oldList = newList

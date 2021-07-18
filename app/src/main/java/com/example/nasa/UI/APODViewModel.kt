@@ -28,7 +28,7 @@ class APODViewModel : ViewModel() {
          val beforeDate = getDateBeforeLocal(localTime)
          Log.e(TAG,beforeDate)
          viewModelScope.launch {
-             _APODData.value = apodApi.getAPODList(Utils.apiKey,beforeDate)
+             _APODData.value = apodApi.getAPODList(Utils.apiKey,beforeDate).filter { it.media_type.equals("image") }
          }
      }
 
