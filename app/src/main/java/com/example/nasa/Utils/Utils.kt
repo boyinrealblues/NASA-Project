@@ -1,4 +1,4 @@
-package com.example.nasa
+package com.example.nasa.Utils
 
 class Utils {
     companion object{

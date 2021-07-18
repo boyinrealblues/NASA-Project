@@ -1,6 +1,6 @@
 package com.example.nasa.Data
 
-import com.example.nasa.Utils
+import com.example.nasa.Utils.Utils
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -11,5 +11,4 @@ object APODServiceInstance {
     val APODApi : APODService by lazy{
         retrofit.create(APODService::class.java)
     }
-
 }

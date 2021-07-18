@@ -4,7 +4,7 @@ data class APOD(
     var date : String,
     var explanation : String,
     var media_type : String,
-    var serview_version : String,
+    var server_version : String,
     var title : String,
     var url : String
     )
