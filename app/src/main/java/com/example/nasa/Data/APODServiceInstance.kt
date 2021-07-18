@@ -11,5 +11,4 @@ object APODServiceInstance {
     val APODApi : APODService by lazy{
         retrofit.create(APODService::class.java)
     }
-
 }

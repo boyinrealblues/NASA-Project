@@ -55,13 +55,15 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener {
             mAdapter.submitList(it)
             activity?.findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.GONE
         })
-
-
         }
 
     override fun interceptItem(position:Int) {
         val bundle = Bundle()
         bundle.putInt("456",position)
+        parentFragmentManager.commit{
+            replace(R.id.container,PhotoViewFragment::class.java,bundle)
+            addToBackStack(null)
+        }
     }
 }
 

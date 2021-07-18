@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
             supportFragmentManager.commit{
                 add<ApodFragment>(R.id.container)
                 setReorderingAllowed(true)
