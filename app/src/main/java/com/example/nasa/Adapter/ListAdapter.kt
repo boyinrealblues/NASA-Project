@@ -27,7 +27,6 @@ class ListAdapter(private val listener : onItemTouchListener) : RecyclerView.Ada
 
         }
         fun bind(data:APOD,position: Int) {
-         if(data.media_type.equals("image"))
             Glide.with(parent!!.context).load(data.url).into(imageView)
             imageView.setOnClickListener{
                 listener.interceptItem(position)
@@ -53,6 +52,9 @@ class ListAdapter(private val listener : onItemTouchListener) : RecyclerView.Ada
 
        fun submitList( newList : List<APOD>)
        {
+           newList.filter {
+               it.media_type.equals("image")
+           }
             val callback = ListDiffUtil(oldList,newList)
             val calc = DiffUtil.calculateDiff(callback)
             oldList = newList
