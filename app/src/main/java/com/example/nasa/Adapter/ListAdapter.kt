@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ListView
+import androidx.core.net.toUri
 import androidx.databinding.DataBindingUtil.inflate
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,19 +14,21 @@ import com.bumptech.glide.Glide
 import com.example.nasa.Data.APOD
 import com.example.nasa.R
 import com.example.nasa.UI.ApodFragment
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 class ListAdapter(private val listener : onItemTouchListener) : RecyclerView.Adapter<ListAdapter.ListViewHolder>(){
 
     private var oldList = emptyList<APOD>()
 
-    class ListViewHolder(private val view : View,private val listener : ListAdapter.onItemTouchListener) : RecyclerView.ViewHolder(view){
+    class ListViewHolder(private val view : View,private val listener : ListAdapter.onItemTouchListener,private val parent:ViewGroup?) : RecyclerView.ViewHolder(view){
         private val imageView : ImageView
         init{
-             imageView = view.findViewById(R.id.imageView)
+             imageView = view.findViewById(R.id.thumbnail)
 
         }
         fun bind(data:APOD,position: Int) {
-            Glide.with(ApodFragment().requireContext()).load(data.url).into(imageView)
+         if(data.media_type.equals("image"))
+            Glide.with(parent!!.context).load(data.url).into(imageView)
             imageView.setOnClickListener{
                 listener.interceptItem(position)
             }
@@ -33,7 +36,7 @@ class ListAdapter(private val listener : onItemTouchListener) : RecyclerView.Ada
         companion object{
             fun create(parent : ViewGroup,listener : ListAdapter.onItemTouchListener): ListViewHolder {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.list_view_holder,parent,false)
-                return ListViewHolder(view,listener)
+                return ListViewHolder(view,listener,parent)
             }
         }
     }
