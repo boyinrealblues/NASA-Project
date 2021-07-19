@@ -9,9 +9,16 @@ import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.example.nasa.R
 import com.example.nasa.databinding.FragmentPhotoBinding
+import com.google.android.material.transition.platform.MaterialContainerTransform
 
 class PhotoFragment : Fragment() {
+
     lateinit private var binding : FragmentPhotoBinding
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform(requireContext(),false)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

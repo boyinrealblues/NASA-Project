@@ -56,6 +56,8 @@ class PhotoViewFragment : Fragment() {
                 parentFragmentManager.commit{
                     replace<PhotoFragment>(R.id.container,args = bundle)
                     addToBackStack(null)
+                    setReorderingAllowed(true)
+                    addSharedElement(binding.imageView,"shared_container")
                 }
             }
         }
