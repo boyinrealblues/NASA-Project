@@ -8,27 +8,35 @@ import androidx.lifecycle.viewModelScope
 import com.example.nasa.Data.APOD
 import com.example.nasa.Data.APODServiceInstance
 import com.example.nasa.Utils.Utils
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 private const val TAG = "APODViewModel"
 class APODViewModel : ViewModel() {
-
     private val apodApi = APODServiceInstance.APODApi
 
     private var _APODData : MutableLiveData<List<APOD>> = MutableLiveData()
     val APODData : LiveData<List<APOD>>
     get() = _APODData
 
+    private var _target : MutableLiveData<Int> = MutableLiveData()
+    val target : LiveData<Int>
+    get() = _target
+
+    init{
+        _target.value =10
+    }
      fun getAPOD() {
          //The current date in local time
          val localTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
-         //date 10 days before the current date
+            //date 10 days before the current date
          val beforeDate = getDateBeforeLocal(localTime)
-         Log.e(TAG,beforeDate)
+
          viewModelScope.launch {
              _APODData.value = apodApi.getAPODList(Utils.apiKey,beforeDate).filter { it.media_type.equals("image") }
+
          }
      }
 
@@ -37,15 +45,15 @@ class APODViewModel : ViewModel() {
           var year = localTime.subSequence(0,localTime.indexOf("-")).toString().toInt()
             var month = localTime.subSequence(localTime.indexOf("-")+1,localTime.lastIndexOf("-")).toString().toInt()
                 var date = localTime.subSequence(localTime.lastIndexOf("-")+1,localTime.length).toString().toInt()
-                    if(date>10){
-                        date = date-10
+                    if(date>_target.value!!){
+                        date = date-_target.value!!
                     }else{
                         if(month==1){
                             month = 12
-                            date = getDaysFromMonth(month,year)+date-10
+                            date = getDaysFromMonth(month,year)+date-_target.value!!
                             year--
                         }else{
-                            date = getDaysFromMonth(month,year)+date-10
+                            date = getDaysFromMonth(month,year)+date-_target.value!!
                             month--
                         }
                     }
@@ -54,7 +62,7 @@ class APODViewModel : ViewModel() {
     }
 
     //return the formatted date
-    private fun getFormattedDate(date: Int, month: Int, year: Int): String {
+    fun getFormattedDate(date: Int, month: Int, year: Int): String {
         val sb = StringBuilder()
          sb.append(year).append("-")
         if(month<10)
@@ -70,7 +78,7 @@ class APODViewModel : ViewModel() {
     }
 
     //returns number of days from months
-    private fun getDaysFromMonth(month: Int,year : Int): Int {
+     fun getDaysFromMonth(month: Int,year : Int): Int {
         when(month){
             1,3,5,7,8,10,12 -> return 31
             2-> {
@@ -83,5 +91,26 @@ class APODViewModel : ViewModel() {
         }
     }
 
+    fun getDays(date:Int,month:Int,year:Int):Long{
+        var sumY =0
+        var sumM =0
+        viewModelScope.launch{
+            for(i in 1970..year-1){
+                if(i%400==0||(i%4==0&&i%100!=0))
+                    sumY+=366
+                else
+                    sumY+=365
+            }
+        }
+        viewModelScope.launch{
+            for(i in 1..month-1){
+                sumM+=getDaysFromMonth(i,year)
+            }
+        }
+        return (sumM+sumY+date).toLong()-1
+    }
 
+    fun targetChange(newTarget : Int){
+        _target.value = newTarget
+    }
 }
