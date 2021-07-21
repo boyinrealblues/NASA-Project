@@ -63,11 +63,9 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener ,DatePickerDial
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         model = ViewModelProvider(this).get(APODViewModel::class.java)
-        model.getAPOD()
         model.target.observe(viewLifecycleOwner,{
             model.getAPOD()
         })
-        model.getAPOD()
         binding.recyclerView?.apply{
             adapter = mAdapter
             layoutManager = GridLayoutManager(requireContext(),2)
@@ -78,8 +76,8 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener ,DatePickerDial
         activity?.findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.VISIBLE
         model.APODData.observe(viewLifecycleOwner, {
             mApod = it
-            Log.e(TAG,it.size.toString())
-            mAdapter.submitList(it)
+            parentFragmentManager.fragmentFactory = ApodFragmentFactory(mApod)
+            mAdapter.submitList(mApod)
             activity?.findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.GONE
         })
         }
@@ -94,7 +92,8 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener ,DatePickerDial
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val s = model.getFormattedDate(dayOfMonth,month,year)
+        Log.e(TAG,"$dayOfMonth/$month/$year")
+        val s = model.getFormattedDate(dayOfMonth,month+1,year)
         val localTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE)
         val year2 = localTime.subSequence(0,localTime.indexOf("-")).toString().toInt()
         val month2 = localTime.subSequence(localTime.indexOf("-")+1,localTime.lastIndexOf("-")).toString().toInt()
@@ -102,9 +101,9 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener ,DatePickerDial
         val days2 = model.getDays(date2,month2,year2)
         val days1 = model.getDays(dayOfMonth,month+1,year)
         model.targetChange((days2-days1).toInt())
+        Log.e(TAG,(days2-days1).toString())
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
     }
-
 }
 
 

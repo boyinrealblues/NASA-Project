@@ -35,6 +35,7 @@ class APODViewModel : ViewModel() {
          val beforeDate = getDateBeforeLocal(localTime)
 
          viewModelScope.launch {
+             Log.e(TAG,beforeDate)
              _APODData.value = apodApi.getAPODList(Utils.apiKey,beforeDate).filter { it.media_type.equals("image") }
 
          }
@@ -48,15 +49,19 @@ class APODViewModel : ViewModel() {
                     if(date>_target.value!!){
                         date = date-_target.value!!
                     }else{
-                        if(month==1){
-                            month = 12
-                            date = getDaysFromMonth(month,year)+date-_target.value!!
-                            year--
-                        }else{
-                            date = getDaysFromMonth(month,year)+date-_target.value!!
-                            month--
-                        }
-                    }
+                            while(date<_target.value!!) {
+                                date = getDaysFromMonth(month, year) + date 
+                                if(month==1)
+                                {
+                                    month=12
+                                    year--
+                                    continue
+                                }
+                                month--
+                            }
+                            date = date-_target.value!!
+                            }
+
                     val Format:String = getFormattedDate(date,month,year)
             return Format
     }
