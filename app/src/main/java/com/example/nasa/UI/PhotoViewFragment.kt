@@ -1,6 +1,7 @@
 package com.example.nasa.UI
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,20 +17,26 @@ import com.bumptech.glide.Glide
 import com.example.nasa.Data.APOD
 import com.example.nasa.R
 import com.example.nasa.databinding.FragmentPhotoViewBinding
+import com.google.android.material.transition.MaterialSharedAxis
 
-class PhotoViewFragment : Fragment() {
+private const val TAG = "PhotoViewFragment"
+class PhotoViewFragment(private val APODList:List<APOD>) : Fragment(){
+
+
     lateinit private var binding: FragmentPhotoViewBinding
     lateinit private var model : APODViewModel
     lateinit private var apod : APOD
-    private var position : Int? = null
+    private var mPosition : Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let{
-            it.getInt("456")?.let{
-                position =it
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+        arguments?.let {
+            it.getInt("456")?.let {
+                mPosition = it
             }
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,12 +49,11 @@ class PhotoViewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.findViewById<Toolbar>(R.id.toolbar)?.visibility = View.GONE
-        model = ViewModelProvider(this).get(APODViewModel::class.java)
-        model.getAPOD()
-        model.APODData.observe(viewLifecycleOwner){
-            apod = it[position!!]
+
+
+            apod = APODList[mPosition!!]
             initApod(apod)
-        }
+
         binding.header.setOnClickListener {
             if(binding.imageView.isVisible&&::apod.isInitialized)
             {
@@ -56,6 +62,8 @@ class PhotoViewFragment : Fragment() {
                 parentFragmentManager.commit{
                     replace<PhotoFragment>(R.id.container,args = bundle)
                     addToBackStack(null)
+                    setReorderingAllowed(true)
+                    addSharedElement(binding.card,"shared_container")
                 }
             }
         }
