@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.example.nasa.Data.APOD
 import com.example.nasa.R
 import com.example.nasa.databinding.FragmentPhotoViewBinding
+import com.google.android.material.transition.MaterialSharedAxis
 
 class PhotoViewFragment : Fragment() {
     lateinit private var binding: FragmentPhotoViewBinding
@@ -24,6 +25,7 @@ class PhotoViewFragment : Fragment() {
     private var position : Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X,true)
         arguments?.let{
             it.getInt("456")?.let{
                 position =it
@@ -57,7 +59,7 @@ class PhotoViewFragment : Fragment() {
                     replace<PhotoFragment>(R.id.container,args = bundle)
                     addToBackStack(null)
                     setReorderingAllowed(true)
-                    addSharedElement(binding.imageView,"shared_container")
+                    addSharedElement(binding.card,"shared_container")
                 }
             }
         }

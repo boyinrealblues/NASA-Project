@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.appcompat.graphics.drawable.AnimatedStateListDrawableCompat.create
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -24,6 +25,8 @@ import com.example.nasa.Adapter.ListAdapter
 import com.example.nasa.Data.APOD
 import com.example.nasa.R
 import com.example.nasa.databinding.FragmentApodBinding
+import com.google.android.material.badge.BadgeDrawable.create
+import com.google.android.material.transition.MaterialSharedAxis
 
 private const val TAG = "ApodFragment"
 class ApodFragment : Fragment(), ListAdapter.onItemTouchListener {
@@ -31,6 +34,11 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener {
     lateinit private var binding: FragmentApodBinding
     private val mAdapter by lazy{
         ListAdapter(this)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = MaterialSharedAxis(MaterialSharedAxis.X,true)
     }
     override fun onCreateView(
         inflater: LayoutInflater,
