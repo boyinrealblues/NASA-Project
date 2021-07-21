@@ -32,7 +32,7 @@ class BlankFragment : Fragment() {
                 parentFragmentManager.commit {
                     replace<BlankFragment2>(R.id.container_3)
                     setReorderingAllowed(true)
-                    addSharedElement(binding.text,"shared")
+                    addSharedElement(binding.press,"shared")
                     addToBackStack(null)
                 }
             }
