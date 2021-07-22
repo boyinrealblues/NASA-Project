@@ -16,6 +16,7 @@ import android.widget.DatePicker
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.graphics.drawable.AnimatedStateListDrawableCompat.create
+import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -23,6 +24,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -42,7 +44,6 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener ,DatePickerDial
     lateinit var mApod : List<APOD>
     lateinit private var binding: FragmentApodBinding
     lateinit private var model : APODViewModel
-    private var diff = 10
     private val mAdapter by lazy{
         ListAdapter(this)
     }
@@ -62,7 +63,8 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener ,DatePickerDial
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        model = ViewModelProvider(this).get(APODViewModel::class.java)
+        requireActivity().findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
+        model = ViewModelProvider(requireActivity()).get(APODViewModel::class.java)
         model.target.observe(viewLifecycleOwner,{
             model.getAPOD()
         })
@@ -75,8 +77,9 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener ,DatePickerDial
            }
         activity?.findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.VISIBLE
         model.APODData.observe(viewLifecycleOwner, {
-            mApod = it
-            parentFragmentManager.fragmentFactory = ApodFragmentFactory(mApod)
+                mApod = it
+
+//            parentFragmentManager.fragmentFactory = ApodFragmentFactory(mApod)
             mAdapter.submitList(mApod)
             activity?.findViewById<ProgressBar>(R.id.progress_bar)?.visibility = View.GONE
         })
@@ -100,6 +103,10 @@ class ApodFragment : Fragment(), ListAdapter.onItemTouchListener ,DatePickerDial
         val date2 = localTime.subSequence(localTime.lastIndexOf("-")+1,localTime.length).toString().toInt()
         val days2 = model.getDays(date2,month2,year2)
         val days1 = model.getDays(dayOfMonth,month+1,year)
+        if((days2-days1)<0){
+            Toast.makeText(requireContext(), "Wait for Updates", Toast.LENGTH_SHORT).show()
+            return
+        }
         model.targetChange((days2-days1).toInt())
         Log.e(TAG,(days2-days1).toString())
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()

@@ -20,12 +20,10 @@ import com.example.nasa.databinding.FragmentPhotoViewBinding
 import com.google.android.material.transition.MaterialSharedAxis
 
 private const val TAG = "PhotoViewFragment"
-class PhotoViewFragment(private val APODList:List<APOD>) : Fragment(){
-
-
+class PhotoViewFragment(/*private val APODList:List<APOD>*/) : Fragment(){
     lateinit private var binding: FragmentPhotoViewBinding
-    lateinit private var model : APODViewModel
     lateinit private var apod : APOD
+    lateinit private var model:APODViewModel
     private var mPosition : Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +47,12 @@ class PhotoViewFragment(private val APODList:List<APOD>) : Fragment(){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         activity?.findViewById<Toolbar>(R.id.toolbar)?.visibility = View.GONE
-
-
-            apod = APODList[mPosition!!]
+        model = ViewModelProvider(requireActivity()).get(APODViewModel::class.java)
+        model.APODData.observe(viewLifecycleOwner) {
+//            apod = APODList[mPosition!!]
+            apod = it[mPosition!!]
             initApod(apod)
-
+        }
         binding.header.setOnClickListener {
             if(binding.imageView.isVisible&&::apod.isInitialized)
             {

@@ -50,7 +50,7 @@ class APODViewModel : ViewModel() {
                         date = date-_target.value!!
                     }else{
                             while(date<_target.value!!) {
-                                date = getDaysFromMonth(month, year) + date 
+                                date = getDaysFromMonth(month, year) + date
                                 if(month==1)
                                 {
                                     month=12
@@ -96,6 +96,7 @@ class APODViewModel : ViewModel() {
         }
     }
 
+    //returns the total number of days since epoch
     fun getDays(date:Int,month:Int,year:Int):Long{
         var sumY =0
         var sumM =0
@@ -115,6 +116,7 @@ class APODViewModel : ViewModel() {
         return (sumM+sumY+date).toLong()-1
     }
 
+    //changed number of days in between today and the last day
     fun targetChange(newTarget : Int){
         _target.value = newTarget
     }
