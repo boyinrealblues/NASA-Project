@@ -21,16 +21,16 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.example.nasa.R
 import com.example.nasa.databinding.FragmentPhotoBinding
+import com.google.android.material.transition.MaterialSharedAxis
 import com.google.android.material.transition.platform.MaterialContainerTransform
 
 private const val TAG = "PhotoFragment"
 class PhotoFragment : Fragment(){
 
     lateinit private var binding : FragmentPhotoBinding
-    lateinit private  var mDraw : Drawable
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedElementEnterTransition = MaterialContainerTransform(requireContext(),true)
+        enterTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
     }
 
     override fun onCreateView(

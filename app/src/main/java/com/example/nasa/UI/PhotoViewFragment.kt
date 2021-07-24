@@ -62,7 +62,6 @@ class PhotoViewFragment(/*private val APODList:List<APOD>*/) : Fragment(){
                     replace<PhotoFragment>(R.id.container,args = bundle)
                     addToBackStack(null)
                     setReorderingAllowed(true)
-                    addSharedElement(binding.card,"shared_container")
                 }
             }
         }

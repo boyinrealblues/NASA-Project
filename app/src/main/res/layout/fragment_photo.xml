@@ -1,11 +1,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:transitionName="shared_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <com.github.chrisbanes.photoview.PhotoView
             android:id="@+id/apod_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
